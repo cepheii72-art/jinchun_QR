@@ -1,0 +1,566 @@
+/* 
+  진천 초평책마을 - 프리미엄 골드 비디오 플레이어 CSS
+  - 고품격 앤틱 골드 테마 (진행바, 로딩, 인디케이터)
+  - 가로/세로 화면 회전 및 모바일 노치(Safe Area) 완벽 대응
+  - 재생/일시정지 버튼 대형화 및 터치 영역 최적화
+*/
+
+:root {
+  /* 고급스러운 완위각 골드 컬러 시스템 */
+  --gold-primary: #D4AF37;
+  --gold-hover: #E6C65A;
+  --gold-active: #B89223;
+  --gold-glow: rgba(212, 175, 55, 0.4);
+  
+  --bg-dark: #000000;
+  --text-main: #FFFFFF;
+  --text-muted: #BBBBBB;
+  
+  --progress-bg: rgba(255, 255, 255, 0.28);
+  --buffer-bg: rgba(255, 255, 255, 0.45);
+  
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh; /* 모바일 브라우저 주소창 완벽 대응 */
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* 화면 전체를 가득 채우는 플레이어 래퍼 (가로/세로 자동 반응형) */
+.player-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 비디오 엘리먼트: 가로/세로 어떤 화면비에서도 왜곡 없이 중앙 맞춤 */
+.video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: #000;
+  cursor: pointer;
+}
+
+/* 비디오 클릭 오버레이 */
+.player-click-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 70px);
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* 화면 중앙 대형 골드 재생 버튼 (아이폰/모바일 최적화 심플 단독 디자인) */
+.big-center-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E6C65A 0%, #D4AF37 50%, #B89223 100%);
+  border: none;
+  color: #111111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 12;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65), 0 0 32px rgba(212, 175, 55, 0.55);
+  transition: transform 0.22s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.25s ease, box-shadow 0.2s;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.big-center-play:hover,
+.big-center-play:active {
+  transform: translate(-50%, -50%) scale(1.08);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75), 0 0 42px rgba(212, 175, 55, 0.75);
+}
+
+.big-center-play svg {
+  width: 36px;
+  height: 36px;
+  fill: #111111;
+  transform: translateX(2px);
+}
+
+/* 영상 재생 중일 때는 중앙 대형 버튼 부드럽게 숨김 */
+.player-wrapper.playing .big-center-play {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.85);
+}
+
+/* 영상 일시정지 중일 때는 중앙 대형 버튼 표시 */
+.player-wrapper.paused .big-center-play {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* 중앙 대형 재생/일시정지 리플 인디케이터 (더 크고 웅장한 효과) */
+.center-action-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-primary);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.28s ease;
+  z-index: 15;
+}
+
+.center-action-indicator.animate {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.18);
+}
+
+/* 더블 탭 스킵 (좌/우 10초 스킵 리플 - 은은한 골드 틴트) */
+.double-tap-ripple {
+  position: absolute;
+  top: 0;
+  width: 35%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, rgba(212, 175, 55, 0) 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 10;
+}
+
+.double-tap-ripple.left { left: 0; }
+.double-tap-ripple.right { right: 0; }
+
+.double-tap-ripple.show {
+  opacity: 1;
+}
+
+.double-tap-ripple .skip-icon {
+  font-size: 1.8rem;
+  color: var(--gold-primary);
+}
+
+.double-tap-ripple .skip-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-top: 4px;
+  color: #fff;
+}
+
+/* 버퍼링 스피너 (골드 테마) */
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border: 4px solid rgba(255, 255, 255, 0.15);
+  border-top-color: var(--gold-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: none;
+  pointer-events: none;
+  z-index: 12;
+}
+
+.player-wrapper.loading .loading-spinner {
+  display: block;
+}
+
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ========================================================
+   컨트롤 바 (모바일 가로/세로 노치 안전영역 대응)
+   ======================================================== */
+.player-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding-top: 18px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.25s ease, visibility 0.25s;
+  z-index: 20;
+}
+
+/* 마우스/터치 유휴 시 컨트롤 숨김 */
+.player-wrapper.hide-controls .player-controls {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.player-wrapper.hide-controls {
+  cursor: none;
+}
+
+/* 타임라인 진행 바 (골드 테마) */
+.progress-container {
+  position: relative;
+  width: 100%;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.progress-bar-bg {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  background-color: var(--progress-bg);
+  border-radius: 3px;
+  transition: height 0.15s ease;
+}
+
+.progress-container:hover .progress-bar-bg {
+  height: 7px;
+}
+
+.buffer-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background-color: var(--buffer-bg);
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.current-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #B89223 0%, var(--gold-primary) 100%);
+  border-radius: 3px;
+  pointer-events: none;
+  box-shadow: 0 0 8px var(--gold-glow);
+}
+
+/* 진행 바 원형 손잡이 (골드 링 스크러버) */
+.scrubber-handle {
+  position: absolute;
+  top: 50%;
+  right: -7px;
+  transform: translateY(-50%) scale(0);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  border: 2px solid var(--gold-primary);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s ease;
+  pointer-events: none;
+}
+
+.progress-container:hover .scrubber-handle,
+.progress-container.dragging .scrubber-handle {
+  transform: translateY(-50%) scale(1);
+}
+
+/* 시간 툴팁 */
+.time-tooltip {
+  position: absolute;
+  bottom: 26px;
+  transform: translateX(-50%);
+  background-color: rgba(20, 20, 20, 0.95);
+  color: var(--gold-primary);
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  display: none;
+  white-space: nowrap;
+  font-weight: 600;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.progress-container:hover .time-tooltip {
+  display: block;
+}
+
+/* 하단 버튼 제어 영역 */
+.controls-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.controls-left,
+.controls-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 일반 컨트롤 버튼 */
+.ctrl-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s, transform 0.1s;
+  opacity: 0.95;
+}
+
+.ctrl-btn:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+  color: var(--gold-primary);
+}
+
+.ctrl-btn:active {
+  transform: scale(0.94);
+}
+
+.ctrl-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+/* ⭐ 재생/일시정지 버튼 (더 크고 누르기 편한 전용 스타일) ⭐ */
+.play-pause-btn {
+  width: 50px !important;
+  height: 50px !important;
+  color: #FFFFFF !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  margin-right: 4px;
+}
+
+.play-pause-btn:hover {
+  background-color: rgba(212, 175, 55, 0.25) !important;
+  color: var(--gold-primary) !important;
+}
+
+.play-pause-btn svg {
+  width: 30px !important;
+  height: 30px !important;
+}
+
+/* 재생 화살표 아이콘: 원형 버튼 내에서 시각적 무게중심(Optical Center) 보정 */
+.play-pause-btn #playIcon {
+  transform: translateX(1px);
+}
+
+.center-action-indicator #centerIcon {
+  transform: translateX(2px);
+}
+
+/* 볼륨 조절 그룹 */
+.volume-group {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-right: 4px;
+}
+
+/* ⭐ 기본 설정: 모바일/터치/태블릿 등 모든 환경에서 슬라이더/노브 완전 제거 (유튜브 모바일 표준) ⭐ */
+.volume-slider-container,
+.desktop-only {
+  display: none !important;
+}
+
+/* PC 데스크톱 마우스 전용 (가로 900px 이상 & 마우스 커서): 마우스 올릴 때만 슬라이더 펼침 */
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  .volume-slider-container {
+    display: flex !important;
+    width: 0;
+    opacity: 0;
+    margin-left: 0;
+    margin-right: 0;
+    overflow: hidden;
+    align-items: center;
+    transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.22s ease;
+  }
+
+  .volume-group:hover .volume-slider-container,
+  .volume-group:focus-within .volume-slider-container {
+    width: 64px;
+    opacity: 1;
+    margin-left: 6px;
+    margin-right: 8px;
+  }
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--gold-primary) 0%,
+    var(--gold-primary) var(--volume-percent, 100%),
+    rgba(255, 255, 255, 0.3) var(--volume-percent, 100%),
+    rgba(255, 255, 255, 0.3) 100%
+  );
+  outline: none;
+  cursor: pointer;
+  transition: height 0.15s ease;
+}
+
+.volume-slider:hover,
+.volume-slider:active {
+  height: 6px;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s;
+}
+
+.volume-slider::-webkit-slider-thumb:hover,
+.volume-slider:active::-webkit-slider-thumb {
+  transform: scale(1.3);
+  background: var(--gold-hover);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold-primary);
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s;
+}
+
+.volume-slider::-moz-range-thumb:hover,
+.volume-slider:active::-moz-range-thumb {
+  transform: scale(1.3);
+  background: var(--gold-hover);
+}
+
+/* 시간 텍스트 */
+.time-display {
+  color: #e0e0e0;
+  font-size: 0.88rem;
+  padding: 0 8px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.time-display #currentTime {
+  color: #fff;
+  font-weight: 600;
+}
+
+.time-display #durationTime {
+  color: var(--text-muted);
+}
+
+/* 토스트 메시지 */
+.player-toast {
+  position: absolute;
+  top: max(20px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 20, 20, 0.92);
+  color: var(--gold-primary);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 25;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.player-toast.show {
+  opacity: 1;
+}
+
+/* 가로 모드(Landscape) 모바일 최적화 미디어 쿼리 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .player-controls {
+    padding-top: 10px;
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+  }
+  
+  .play-pause-btn {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  
+  .play-pause-btn svg {
+    width: 26px !important;
+    height: 26px !important;
+  }
+  
+  .ctrl-btn {
+    width: 36px;
+    height: 36px;
+  }
+}

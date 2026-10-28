@@ -1,0 +1,8 @@
+# Large media files (GitHub has 100MB file limit)
+webhosting/*.mp4
+*.mp4
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+*.tmp

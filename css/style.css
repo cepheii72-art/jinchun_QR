@@ -1,0 +1,201 @@
+/* 
+   진천 초평책마을 - 완위각 전시물 영문 안내 전용 스타일시트
+   모바일 최적화 (Mobile Optimized for QR Exhibition Guide)
+   사용 서체: KopubWorld돋움체 (PDF 발주서 스펙)
+   - 대제목: Bold 20pt
+   - 소제목: Bold 14pt
+   - 본   문: Medium 12pt
+*/
+
+@charset "UTF-8";
+
+/* KoPubWorld 돋움체 로컬 내장 (외부 의존성 0%, 영구적 보장) */
+@font-face {
+  font-family: 'KoPubWorldDotum';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/KoPubWorld-Dotum-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'KoPubWorldDotum';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/KoPubWorld-Dotum-Bold.woff2') format('woff2');
+}
+
+:root {
+  --font-family: 'KoPubWorldDotum', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  
+  /* 차분하고 눈이 편안한 전시관/도서관 컬러 팔레트 */
+  --bg-color: #FAF8F5;        /* 눈부심 없는 부드러운 고서 미색 */
+  --text-main: #201F1D;       /* 짙은 먹색 차콜 */
+  --text-sub: #3A3833;        /* 본문 웜차콜 (선명한 가독성) */
+  --quote-bg: #F1ECE3;        /* 인용구 미색 박스 */
+  --quote-border: #9E8569;    /* 고서 브라운 보더 */
+  
+  --max-width: 600px;         /* 모바일/태블릿 읽기 최적 가로폭 */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
+  background-color: var(--bg-color);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.6;
+  letter-spacing: -0.015em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 모바일 노치 및 홈바 safe area 대응 */
+.page-container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding-top: max(2rem, env(safe-area-inset-top));
+  padding-bottom: max(3rem, env(safe-area-inset-bottom));
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  padding-right: max(1.25rem, env(safe-area-inset-right));
+}
+
+.content-wrapper {
+  text-align: left;
+}
+
+/* 대제목: Bold 20pt (모바일 최적화: 23px~26px) */
+.exhibit-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text-main);
+  margin-bottom: 1.65rem;
+  letter-spacing: -0.025em;
+  text-align: left;
+  border-bottom: 1px solid rgba(158, 133, 105, 0.2);
+  padding-bottom: 0.85rem;
+}
+
+/* 섹션 간격 */
+.section-group {
+  margin-bottom: 1.35rem;
+}
+
+.section-group:last-child {
+  margin-bottom: 0;
+}
+
+/* 소제목: Bold 14pt (약 18px) */
+.section-subtitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--text-main);
+  margin: 1.5rem 0 0.45rem;
+  letter-spacing: -0.015em;
+  text-align: left;
+}
+
+.section-group:first-of-type .section-subtitle {
+  margin-top: 0;
+}
+
+/* 본문: Medium 12pt (차분하고 정돈된 1.6 행간) */
+.section-text {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--text-sub);
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.section-text:last-child {
+  margin-bottom: 0;
+}
+
+/* Quote Block (고서 인용구) */
+.quote-block {
+  margin: 1.25rem 0;
+  padding: 1rem 1.25rem;
+  background-color: var(--quote-bg);
+  border-left: 3.5px solid var(--quote-border);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.95rem;
+  color: #262421;
+}
+
+.quote-block p {
+  margin-bottom: 0.65rem;
+  line-height: 1.58;
+}
+
+.quote-block p:last-child {
+  margin-bottom: 0;
+}
+
+/* Poem Block (Section 03 서가배너 시 구절) */
+.poem-container {
+  margin: 1rem 0 1.5rem;
+}
+
+.poem-stanza {
+  margin-bottom: 1.25rem;
+}
+
+.poem-stanza:last-child {
+  margin-bottom: 0;
+}
+
+.poem-line {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.68;
+  color: var(--text-main);
+  text-align: left;
+}
+
+/* 소형 모바일 화면 (가로 375px 이하: iPhone SE, 갤럭시 작은 화면) */
+@media (max-width: 375px) {
+  .page-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .exhibit-title {
+    font-size: 1.4rem;
+    margin-bottom: 1.35rem;
+  }
+  
+  .section-subtitle {
+    font-size: 1.08rem;
+    margin: 1.25rem 0 0.4rem;
+  }
+  
+  .section-text {
+    font-size: 0.975rem;
+    line-height: 1.6;
+  }
+  
+  .quote-block {
+    padding: 0.9rem 1rem;
+    font-size: 0.925rem;
+  }
+}
