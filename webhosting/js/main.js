@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const closeModal = () => {
     modal.classList.remove('active');
+    modalImg.classList.remove('is-zoomed');
     document.body.style.overflow = '';
     setTimeout(() => {
       modalImg.src = '';
@@ -42,11 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 닫기 이벤트들
+  // 닫기 및 확대/축소 토글 이벤트
   closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => {
-    if (e.target === modal || e.target === modalImg) {
+    if (e.target === modal) {
       closeModal();
+    } else if (e.target === modalImg) {
+      modalImg.classList.toggle('is-zoomed');
     }
   });
 

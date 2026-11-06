@@ -204,28 +204,95 @@ body {
    Image & Figure Styles (2차 발주서 전시 레이아웃 및 모바일 최적화)
    ============================================================ */
 
-/* 메인 일러스트 (상단 대제목 하단: Page 4, 5, 6) */
+/* 메인 일러스트 (상단 대제목 하단: Page 1, 4, 5, 6, 8, 9) */
 .main-figure {
+  position: relative;
   margin: 0 0 1.65rem 0;
   width: 100%;
   border-radius: 12px;
   overflow: hidden;
-  background-color: #EFE9DE;
+  border: 1px solid rgba(45, 38, 30, 0.28);
   box-shadow: 0 4px 18px rgba(45, 38, 30, 0.08);
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  transform: translateZ(0);
 }
 
+.main-figure picture,
 .main-figure img {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 12px;
+  border-radius: 0;
   transition: transform 0.25s ease;
 }
+
+/* 돋보기 확대 안내 배지 (가계도 등 확대 유도) */
+.zoom-hint-badge {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px 8px 11px;
+  background-color: rgba(30, 26, 22, 0.86);
+  color: #FAF7F2;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.26), 0 1px 3px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+  animation: zoomHintPulse 2.8s ease-in-out infinite;
+  z-index: 2;
+}
+
+.zoom-hint-badge .zoom-icon {
+  display: block;
+  flex-shrink: 0;
+  stroke: #FAF7F2;
+  transition: transform 0.25s ease;
+}
+
+.main-figure:hover .zoom-hint-badge {
+  background-color: rgba(18, 15, 12, 0.94);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px);
+}
+
+.main-figure:hover .zoom-hint-badge .zoom-icon {
+  transform: scale(1.12);
+}
+
+@keyframes zoomHintPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.26);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.38), 0 0 0 3px rgba(255, 255, 255, 0.2);
+  }
+}
+
+
 
 /* 섹션 내 전폭 이미지 블록 (Page 2 - Woodblock, Movable Type, Electronic Books) */
 .figure-block {
   margin: 0.9rem 0 1.25rem;
   width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(45, 38, 30, 0.22);
+  box-shadow: 0 3px 12px rgba(45, 38, 30, 0.07);
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  transform: translateZ(0);
 }
 
 .figure-block picture,
@@ -233,9 +300,8 @@ body {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 8px;
-  box-shadow: 0 3px 12px rgba(45, 38, 30, 0.07);
-  background-color: #F0ECE4;
+  border-radius: 0;
+  background-color: transparent;
 }
 
 /* 좌우 나란히 배치 레이아웃 (Page 2 - Archimedes Palimpsest) */
@@ -253,6 +319,10 @@ body {
 .figure-side .img-box {
   flex: 0 0 110px;
   max-width: 120px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(45, 38, 30, 0.22);
+  box-shadow: 0 2px 8px rgba(45, 38, 30, 0.1);
 }
 
 .figure-side .img-box picture,
@@ -260,8 +330,7 @@ body {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(45, 38, 30, 0.1);
+  border-radius: 0;
 }
 
 .figure-side .caption-box {
@@ -320,6 +389,8 @@ body {
   opacity: 0;
   transition: opacity 0.25s ease;
   padding: 1.5rem;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .image-modal.active {
@@ -334,6 +405,15 @@ body {
   border-radius: 6px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
   animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: zoom-in;
+  transition: transform 0.2s ease, max-width 0.2s ease, max-height 0.2s ease;
+}
+
+.image-modal-content.is-zoomed {
+  max-width: none;
+  max-height: none;
+  cursor: zoom-out;
+  margin: auto;
 }
 
 .image-modal-close {
