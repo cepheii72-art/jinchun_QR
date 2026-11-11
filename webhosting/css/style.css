@@ -80,9 +80,9 @@ body {
   text-align: left;
 }
 
-/* 대제목: Bold 20pt (모바일 최적화: 23px~26px) */
+/* 대제목: Bold 20pt (모바일 최적화: 시원한 헤더 크기) */
 .exhibit-title {
-  font-size: 1.55rem;
+  font-size: 1.8rem;
   font-weight: 700;
   line-height: 1.35;
   color: var(--text-main);
@@ -180,7 +180,7 @@ body {
   }
   
   .exhibit-title {
-    font-size: 1.4rem;
+    font-size: 1.55rem;
     margin-bottom: 1.35rem;
   }
   
@@ -461,3 +461,208 @@ body {
     font-size: 0.76rem;
   }
 }
+
+/* ============================================================
+   Page 10: 두타초 탈책 시 (Dutacho Poetry) 전용 게슈탈트 스타일
+   게슈탈트 시지각 원리: 근접성, 유사성, 공동 영역성(폐쇄성), 연속성
+   ============================================================ */
+
+/* 카테고리 라벨 (두타초 제4책 / 시) */
+.exhibit-category {
+  display: inline-block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #7A654D;
+  background-color: rgba(158, 133, 105, 0.12);
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+/* 상단 현판 안내 노티스 (유사성의 원리 기준 제시) */
+.poem-guide-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background-color: #EEF4FA;
+  border: 1px solid #C9DCF0;
+  border-left: 3.5px solid #1A5FB4;
+  border-radius: 6px;
+  padding: 0.75rem 0.95rem;
+  margin-bottom: 1.65rem;
+}
+
+.poem-guide-notice .notice-icon {
+  color: #1A5FB4;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+.poem-guide-notice .notice-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1A5FB4;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+/* 시 목록 컨테이너 */
+.poem-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ============================================================
+   Page 10: 두타초 제4책 / 시(詩)
+   (큐알코드추가발주.pdf 원본 규격 100% 1:1 매핑)
+   ============================================================ */
+
+/* 본문 컨테이너: PDF와 동일한 단아한 플랫 수직 흐름 */
+.pdf-style-container {
+  padding-top: 0.35rem;
+}
+
+/* 안내문: PDF 원본 마젠타 핑크 (#ec008c, 11pt) */
+.pdf-notice-magenta {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ec008c;
+  line-height: 1.5;
+  margin-bottom: 1.15rem;
+  letter-spacing: -0.015em;
+  word-break: keep-all;
+}
+
+/* 작품별 카드 박스 구분 (이전 카드 스타일로 작품 단위 구획) */
+.poem-card {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(158, 133, 105, 0.22);
+  border-radius: 12px;
+  padding: 1.25rem 1.15rem;
+  box-shadow: 0 3px 12px rgba(45, 38, 30, 0.04);
+  margin-bottom: 0.9rem; /* 박스 간격 축소 (기존 1.5rem -> 0.9rem) */
+  transition: box-shadow 0.2s ease;
+}
+
+.poem-card:last-child {
+  margin-bottom: 0;
+}
+
+/* 첫 번째 도입 구절: PDF 원본 16pt 검정색 (#231f20) */
+.pdf-first-stanza {
+  margin-bottom: 1.25rem;
+}
+
+.pdf-first-stanza .first-line-kr {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #231f20;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.1rem; /* 한글-한자 간격 축소 */
+  word-break: keep-all;
+}
+
+.pdf-first-stanza .first-line-hanja {
+  font-family: "IBM Plex Sans TC", "Noto Sans TC", "Noto Sans SC", "Apple SD Gothic Neo", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #231f20;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  word-break: keep-all;
+}
+
+/* 파란색 본문 영역 (PDF 원본: #0000ff / 가독성 최적화 블루 #0044CC) */
+.pdf-blue-section {
+  color: #0044CC;
+}
+
+/* 시 구절 묶음 (PDF 레이아웃: 한글 1행, 한자 1행) */
+.pdf-couplet {
+  margin-bottom: 0.85rem;
+}
+
+.pdf-couplet:last-child {
+  margin-bottom: 0;
+}
+
+/* 한글 시 행 (12pt 블루) */
+.pdf-blue-kr {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #0044CC;
+  line-height: 1.42;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.05rem; /* 한글과 한자 사이 간격 밀착 */
+  word-break: keep-all;
+}
+
+/* 한자 시 행 (12pt 블루, IBM Plex Sans TC) */
+.pdf-blue-hanja {
+  font-family: "IBM Plex Sans TC", "Noto Sans TC", "Noto Sans SC", "Apple SD Gothic Neo", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #0044CC;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  word-break: keep-all;
+}
+
+/* 서문/해설 단락 (파란색 긴 설명 문장) */
+.pdf-blue-prose {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #0044CC;
+  line-height: 1.48;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.15rem; /* 서문 한글-한자 간격 축소 */
+  word-break: keep-all;
+}
+
+.pdf-blue-prose-hanja {
+  font-family: "IBM Plex Sans TC", "Noto Sans TC", "Noto Sans SC", "Apple SD Gothic Neo", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #0044CC;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  margin-bottom: 1.15rem;
+  word-break: keep-all;
+}
+
+/* 하위 절구 간격 (절구 1과 절구 2 사이 한 줄 띄어쓰기) */
+.pdf-stanza-gap {
+  margin-bottom: 1.15rem;
+}
+
+/* 구분선 (PDF 원본의 ----------------- 에 해당하는 단정한 점선) */
+.pdf-divider {
+  border: none;
+  border-top: 1px dashed rgba(0, 68, 204, 0.35);
+  margin: 1.5rem 0;
+}
+
+/* 소형 모바일 최적화 */
+@media (max-width: 375px) {
+  .pdf-first-stanza .first-line-kr {
+    font-size: 1.15rem;
+  }
+  .pdf-first-stanza .first-line-hanja {
+    font-size: 0.98rem;
+  }
+  .pdf-blue-kr,
+  .pdf-blue-prose {
+    font-size: 0.975rem;
+  }
+  .pdf-blue-hanja,
+  .pdf-blue-prose-hanja {
+    font-size: 0.9rem;
+  }
+}
+
